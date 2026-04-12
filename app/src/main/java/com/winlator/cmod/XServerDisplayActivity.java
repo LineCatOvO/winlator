@@ -704,11 +704,32 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             });
         };
 
-        if (xServer.screenInfo.height > xServer.screenInfo.width) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            configChangedCallback = runnable;
-        } else
-              runnable.run();
+        // 读取 forceOrientation 配置
+        String forceOrientation = preferences.getString("forceOrientation", "auto");
+
+        // 根据配置设置屏幕方向
+        switch (forceOrientation) {
+            case "portrait":
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                break;
+            case "landscape":
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                break;
+            case "reverse portrait":
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
+                break;
+            case "reverse landscape":
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+                break;
+            case "auto":
+            case "no":
+            default:
+                // 跟随系统全局设置
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                break;
+        }
+        configChangedCallback = runnable;
+        runnable.run();
     }
 
     // Method to parse container_id from .desktop file
