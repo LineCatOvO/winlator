@@ -166,6 +166,12 @@ public class LogView extends View {
         scrollPosition.set(0, getScrollMaxTop());
     }
 
+    public String getTextContent() {
+        synchronized (lock) {
+            return String.join("\n", lines);
+        }
+    }
+
     public void clear() {
         synchronized (lock) {
             lines.clear();
